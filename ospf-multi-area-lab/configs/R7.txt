@@ -1,0 +1,125 @@
+
+!
+version 12.4
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+!
+hostname Router
+!
+boot-start-marker
+boot-end-marker
+!
+!
+no aaa new-model
+mmi polling-interval 60
+no mmi auto-configure
+no mmi pvc
+mmi snmp-timeout 180
+ip source-route
+!
+!
+!
+!
+ip cef
+no ipv6 traffic interface-statistics
+no ipv6 cef
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+!
+!
+!
+redundancy
+! 
+!
+!
+!
+!
+!
+!
+!
+!
+interface Ethernet0/0
+ no shutdown
+ no ip address
+ shutdown
+!
+interface Ethernet0/1
+ no shutdown
+ no ip address
+ shutdown
+!
+interface Ethernet0/2
+ no shutdown
+ no ip address
+ shutdown
+!
+interface Ethernet0/3
+ no shutdown
+ no ip address
+ shutdown
+!
+interface Serial1/0
+ no shutdown
+ ip address 10.67.1.7 255.255.255.0
+ ip ospf 1 area 67
+ no fair-queue
+ serial restart-delay 0
+!
+interface Serial1/1
+ no shutdown
+ ip address 10.78.1.7 255.255.255.0
+ ip ospf 1 area 78
+ serial restart-delay 0
+!
+interface Serial1/2
+ no shutdown
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+interface Serial1/3
+ no shutdown
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+router ospf 1
+ router-id 7.7.7.7
+ log-adjacency-changes
+ area 0 authentication message-digest
+ area 67 virtual-link 6.6.6.6 message-digest-key 1 md5 cisco123
+ passive-interface default
+ no passive-interface Serial1/0
+ no passive-interface Serial1/1
+!
+ip forward-protocol nd
+!
+!
+no ip http server
+no ip http secure-server
+!
+!
+!
+!
+!
+!
+!
+control-plane
+!
+!
+line con 0
+ exec-timeout 0 0
+ logging synchronous
+line aux 0
+line vty 0 4
+ login
+!
+exception data-corruption buffer truncate
+end
